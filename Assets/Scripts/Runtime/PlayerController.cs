@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.PlayerPowerUps;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace Assets.Scripts.Runtime
         private float massMul = 1f;
 
         // Gestione durate per tipo di effect (refresh durata)
-        private readonly Dictionary<PowerUpEffectSO, Coroutine> activeEffects = new();
+        private readonly Dictionary<PowerUpEffect, Coroutine> activeEffects = new();
 
         // Compatibilità vecchio speed boost (senza SO)
         private Coroutine legacySpeedRoutine;
@@ -74,7 +75,7 @@ namespace Assets.Scripts.Runtime
         // POWER-UP (nuovo sistema)
         // =========================
 
-        public void ApplyPowerUp(PowerUpEffectSO effect)
+        public void ApplyPowerUp(PowerUpEffect effect)
         {
             if (effect == null) return;
 
@@ -93,7 +94,7 @@ namespace Assets.Scripts.Runtime
             }
         }
 
-        private IEnumerator RemoveAfter(PowerUpEffectSO effect)
+        private IEnumerator RemoveAfter(PowerUpEffect effect)
         {
             yield return new WaitForSeconds(effect.durationSeconds);
             RemoveModifiers(effect.modifiers);
