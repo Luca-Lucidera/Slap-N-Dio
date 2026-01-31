@@ -172,5 +172,21 @@ namespace Assets.Scripts.Runtime
 
             return cube;
         }
+
+        public List<Transform> GetActivePlayerTransforms()
+        {
+            List<Transform> transforms = new List<Transform>();
+
+            if (keyboardPlayer != null)
+                transforms.Add(keyboardPlayer.transform);
+
+            foreach (var kvp in gamepadPlayers)
+            {
+                if (kvp.Value != null)
+                    transforms.Add(kvp.Value.transform);
+            }
+
+            return transforms;
+        }
     }
 }
