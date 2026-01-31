@@ -11,7 +11,7 @@ namespace Assets.Scripts.Runtime.UI
         [SerializeField] private int slotIndex;
         
         private TextMeshProUGUI text;
-        private string joinPromptText = "Premi per joinare";
+        private string joinPromptText = "Premi A per joinare";
 
         private void Awake()
         {
