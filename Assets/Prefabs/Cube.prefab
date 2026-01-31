@@ -153,4 +153,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c362f6f11519745874c1db515b4a36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.CubeDemonstratePhysic
-  force: 250
+  force: 120
