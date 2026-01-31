@@ -66,7 +66,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede2bd0e93fd8ee458677ac63d2e99c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PowerUpPickup
+<<<<<<<< HEAD:Assets/Prefabs/PowerUpObjectSlap.prefab
   effect: {fileID: 11400000, guid: 6e0a74233549d1348879fa0f26c242ce, type: 2}
+========
+  effect: {fileID: 11400000, guid: b759e0e53f13a3b42b5d7b02b31cf8bd, type: 2}
+>>>>>>>> 568c4fc1d9360f3236c517f63a0b39f4fed998f2:Assets/Prefabs/PowerUpSpeed.prefab
   objectToDestroy: {fileID: 0}
 --- !u!1 &6359157464530998412
 GameObject:
@@ -83,7 +87,11 @@ GameObject:
   - component: {fileID: 3904465144984709986}
   - component: {fileID: -651831457711803471}
   m_Layer: 0
+<<<<<<<< HEAD:Assets/Prefabs/PowerUpObjectSlap.prefab
   m_Name: PowerUpObjectSlap
+========
+  m_Name: PowerUpSpeed
+>>>>>>>> 568c4fc1d9360f3236c517f63a0b39f4fed998f2:Assets/Prefabs/PowerUpSpeed.prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

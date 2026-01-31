@@ -6,11 +6,20 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PowerUpSpawner : MonoBehaviour
     {
+        [System.Serializable]
+        public class WeightedPowerUp
+        {
+            public GameObject prefab;
+
+            [Tooltip("Peso relativo (puoi pensarla come percentuale se la somma fa 100). 0 = mai.")]
+            [Min(0f)] public float weight = 1f;
+        }
+
         [Header("Spawn Area (BoxCollider Trigger)")]
         [SerializeField] private BoxCollider spawnArea;
 
-        [Header("PowerUp Prefabs")]
-        [SerializeField] private List<GameObject> powerUpPrefabs = new List<GameObject>();
+        [Header("PowerUp Pool (Prefab + Weight)")]
+        [SerializeField] private List<WeightedPowerUp> powerUpPool = new List<WeightedPowerUp>();
 
         [Header("Timing")]
         [SerializeField] private float initialDelay = 2f;
@@ -69,9 +78,9 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
         private void SpawnOne()
         {
             if (spawnArea == null) return;
-            if (powerUpPrefabs == null || powerUpPrefabs.Count == 0) return;
 
-            GameObject prefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Count)];
+            GameObject prefab = PickWeightedPrefab();
+            if (prefab == null) return;
 
             for (int attempt = 0; attempt < maxAttemptsPerSpawn; attempt++)
             {
@@ -87,7 +96,6 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
                 Quaternion rot = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
                 GameObject instance = Instantiate(prefab, spawnPos, rot);
 
-                // Sicurezza: se ha rigidbody, azzera velocità (evita drift strani se prefab salvato con velocity)
                 if (instance.TryGetComponent<Rigidbody>(out var rb))
                 {
                     rb.linearVelocity = Vector3.zero;
@@ -100,29 +108,62 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
             }
         }
 
+        private GameObject PickWeightedPrefab()
+        {
+            if (powerUpPool == null || powerUpPool.Count == 0)
+                return null;
+
+            float total = 0f;
+            for (int i = 0; i < powerUpPool.Count; i++)
+            {
+                var item = powerUpPool[i];
+                if (item == null || item.prefab == null) continue;
+                if (item.weight <= 0f) continue;
+                total += item.weight;
+            }
+
+            if (total <= 0f)
+                return null;
+
+            float r = Random.Range(0f, total);
+
+            for (int i = 0; i < powerUpPool.Count; i++)
+            {
+                var item = powerUpPool[i];
+                if (item == null || item.prefab == null) continue;
+                if (item.weight <= 0f) continue;
+
+                r -= item.weight;
+                if (r <= 0f)
+                    return item.prefab;
+            }
+
+            // fallback per edge case floating point
+            for (int i = powerUpPool.Count - 1; i >= 0; i--)
+                if (powerUpPool[i] != null && powerUpPool[i].prefab != null && powerUpPool[i].weight > 0f)
+                    return powerUpPool[i].prefab;
+
+            return null;
+        }
+
         private bool TryGetGroundPoint(out Vector3 groundPoint)
         {
             groundPoint = Vector3.zero;
 
             Bounds b = spawnArea.bounds;
 
-            // Padding "interno" per non spawnare vicino ai bordi.
-            // Lo clampiamo a >= 0 e verifichiamo che resti spazio disponibile.
             float pad = Mathf.Max(0f, edgePadding);
-
             float minX = b.min.x + pad;
             float maxX = b.max.x - pad;
             float minZ = b.min.z + pad;
             float maxZ = b.max.z - pad;
 
-            // Se il padding è troppo grande, non c'è area valida.
             if (minX >= maxX || minZ >= maxZ)
                 return false;
 
             float x = Random.Range(minX, maxX);
             float z = Random.Range(minZ, maxZ);
 
-            // parto da sopra l'area e tiro giù
             Vector3 rayStart = new Vector3(x, b.max.y + groundRaycastExtraHeight, z);
 
             if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, groundRaycastDistance, groundLayer))

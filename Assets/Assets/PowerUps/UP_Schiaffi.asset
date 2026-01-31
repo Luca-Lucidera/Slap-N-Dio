@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: PU_Effect_Speed
+  m_Name: UP_Schiaffi
   m_EditorClassIdentifier: Assembly-CSharp:Assets.Scripts.Runtime:PowerUpEffectSO
   powerUpName: POWER UP
-  pickupText: Power up!
+  pickupText: Schiaffi Up!
   durationSeconds: 5
   modifiers:
     moveSpeedMultiplier: 1
     slapForceMultiplier: 1
-    slapCooldownMultiplier: 1
+    slapCooldownMultiplier: 2
     slapRadiusMultiplier: 1
     playerScaleMultiplier: 1
     massMultiplier: 1
