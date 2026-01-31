@@ -14,12 +14,17 @@ namespace Assets.Scripts.Runtime
 
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float rotationSpeed = 180f;  // gradi/secondo
         [SerializeField] private float deadzone = 0.1f;
 
-        [Header("Slap stats (placeholder per futuri powerup)")]
-        [SerializeField] private float slapForce = 10f;
-        [SerializeField] private float slapCooldown = 0.8f;
+        [Header("Slap Stats")]
+        [SerializeField] private float slapForce = 500f;
+        [SerializeField] private float slapCooldown = 2f;
         [SerializeField] private float slapRadius = 1.0f;
+
+        [Header("Slap Detection")]
+        [SerializeField] private float slapOffset = 0.8f;
+        [SerializeField] private LayerMask playerLayerMask;
 
         [Header("Body (placeholder per futuri powerup)")]
         [SerializeField] private float baseScale = 1f;
@@ -42,6 +47,9 @@ namespace Assets.Scripts.Runtime
         // Compatibilità vecchio speed boost (senza SO)
         private Coroutine legacySpeedRoutine;
 
+        // Slap system
+        private float lastSlapTime = -Mathf.Infinity;
+
         public float CurrentMoveSpeed => moveSpeed * moveSpeedMul;
         public float CurrentSlapForce => slapForce * slapForceMul;
         public float CurrentSlapCooldown => slapCooldown * slapCooldownMul;
@@ -55,23 +63,82 @@ namespace Assets.Scripts.Runtime
 
         private void Awake()
         {
+            // Inizializza la LayerMask per il layer "Player" se non configurata
+            if (playerLayerMask == 0)
+            {
+                playerLayerMask = LayerMask.GetMask("Player");
+            }
+
             // Applica i valori base (scala/massa) all'avvio
             ApplyScaleAndMass();
         }
 
         private void Update()
         {
-            Vector3 movement = Vector3.zero;
+            float moveInput = 0f;
+            float rotateInput = 0f;
 
             if (useKeyboard)
-                movement = GetKeyboardInput();
+                (moveInput, rotateInput) = GetKeyboardInput();
             else if (assignedGamepad != null)
-                movement = GetGamepadInput();
+                (moveInput, rotateInput) = GetGamepadInput();
 
-            if (movement.sqrMagnitude > 0f)
+            // Applica rotazione
+            if (Mathf.Abs(rotateInput) > 0f)
             {
-                movement.Normalize();
-                transform.position += movement * CurrentMoveSpeed * Time.deltaTime;
+                transform.Rotate(0f, rotateInput * rotationSpeed * Time.deltaTime, 0f);
+            }
+
+            // Applica movimento nella direzione forward
+            if (Mathf.Abs(moveInput) > 0f)
+            {
+                transform.position += transform.forward * moveInput * CurrentMoveSpeed * Time.deltaTime;
+            }
+
+            // Slap input
+            if (useKeyboard)
+            {
+                if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+                    TrySlap();
+            }
+            else if (assignedGamepad != null)
+            {
+                if (assignedGamepad.rightTrigger.wasPressedThisFrame)
+                    TrySlap();
+            }
+        }
+
+        // =========================
+        // SLAP SYSTEM
+        // =========================
+
+        private void TrySlap()
+        {
+            if (Time.time < lastSlapTime + CurrentSlapCooldown)
+                return;
+
+            lastSlapTime = Time.time;
+            ExecuteSlap();
+        }
+
+        private void ExecuteSlap()
+        {
+            Vector3 slapDirection = transform.forward;
+            Vector3 slapOrigin = transform.position + slapDirection * slapOffset;
+
+            Collider[] hits = Physics.OverlapSphere(slapOrigin, CurrentSlapRadius, playerLayerMask);
+
+            foreach (var hit in hits)
+            {
+                if (hit.transform == transform) continue;
+
+                if (hit.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    Vector3 pushDir = hit.transform.position - transform.position;
+                    pushDir.y = 0f;
+                    pushDir.Normalize();
+                    rb.AddForce(pushDir * CurrentSlapForce, ForceMode.Impulse);
+                }
             }
         }
 
@@ -175,31 +242,32 @@ namespace Assets.Scripts.Runtime
         // =========================
         // INPUT
         // =========================
-        private Vector3 GetKeyboardInput()
+        private (float move, float rotate) GetKeyboardInput()
         {
             var keyboard = Keyboard.current;
-            if (keyboard == null) return Vector3.zero;
+            if (keyboard == null) return (0f, 0f);
 
-            Vector3 movement = Vector3.zero;
+            float move = 0f;
+            float rotate = 0f;
 
-            if (keyboard.wKey.isPressed) movement.z += 1f;
-            if (keyboard.sKey.isPressed) movement.z -= 1f;
-            if (keyboard.aKey.isPressed) movement.x -= 1f;
-            if (keyboard.dKey.isPressed) movement.x += 1f;
+            if (keyboard.wKey.isPressed) move += 1f;
+            if (keyboard.sKey.isPressed) move -= 1f;
+            if (keyboard.aKey.isPressed) rotate -= 1f;
+            if (keyboard.dKey.isPressed) rotate += 1f;
 
-            return movement;
+            return (move, rotate);
         }
 
-        private Vector3 GetGamepadInput()
+        private (float move, float rotate) GetGamepadInput()
         {
-            if (assignedGamepad == null) return Vector3.zero;
+            if (assignedGamepad == null) return (0f, 0f);
 
             Vector2 stick = assignedGamepad.leftStick.ReadValue();
 
-            if (stick.sqrMagnitude > deadzone * deadzone)
-                return new Vector3(stick.x, 0f, stick.y);
+            if (stick.sqrMagnitude < deadzone * deadzone)
+                return (0f, 0f);
 
-            return Vector3.zero;
+            return (stick.y, stick.x);
         }
     }
 }

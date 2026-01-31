@@ -234,6 +234,7 @@ namespace Assets.Scripts.Runtime
         {
             GameObject cube = Instantiate(playerPrefab, position, Quaternion.identity);
             cube.name = name;
+            cube.layer = LayerMask.NameToLayer("Player");
 
             var renderer = cube.GetComponent<MeshRenderer>();
             if (renderer != null && material != null)
