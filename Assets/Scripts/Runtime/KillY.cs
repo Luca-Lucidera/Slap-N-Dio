@@ -6,13 +6,44 @@ namespace Assets.Scripts.Runtime
 	[RequireComponent(typeof(BoxCollider))]
 	public class KillY: MonoBehaviour
 	{
+        [SerializeField] private Transform respawnPoint;
+
+        private WaitForSeconds waitForSeconds;
+        private PlayerManager playerManager;
+
         void Awake()
         {
             GetComponent<BoxCollider>().isTrigger = true;
+            waitForSeconds = new WaitForSeconds(5f);
         }
+
+        void Start()
+        {
+            playerManager = FindFirstObjectByType<PlayerManager>();
+        }
+
         private void OnTriggerEnter(Collider other)
         {
-            Destroy(other.gameObject);
+            if (other.TryGetComponent<PlayerController>(out _))
+            {
+                StartCoroutine(RespawnPlayer(other.gameObject));
+            }
+            else
+            {
+                Destroy(other.gameObject);
+            }
+        }
+
+        private IEnumerator RespawnPlayer(GameObject player)
+        {
+            playerManager?.MarkPlayerAsDead(player.transform);
+            player.SetActive(false);
+
+            yield return waitForSeconds;
+
+            player.transform.position = respawnPoint.position;
+            player.SetActive(true);
+            playerManager?.MarkPlayerAsAlive(player.transform);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Assets.Scripts.Runtime
         private GameObject keyboardPlayer;
         private Dictionary<int, GameObject> gamepadPlayers = new Dictionary<int, GameObject>();
         private List<int> gamepadSlots = new List<int>();
+        private HashSet<Transform> deadPlayers = new HashSet<Transform>();
 
         private void OnEnable()
         {
@@ -177,16 +178,26 @@ namespace Assets.Scripts.Runtime
         {
             List<Transform> transforms = new List<Transform>();
 
-            if (keyboardPlayer != null)
+            if (keyboardPlayer != null && !deadPlayers.Contains(keyboardPlayer.transform))
                 transforms.Add(keyboardPlayer.transform);
 
             foreach (var kvp in gamepadPlayers)
             {
-                if (kvp.Value != null)
+                if (kvp.Value != null && !deadPlayers.Contains(kvp.Value.transform))
                     transforms.Add(kvp.Value.transform);
             }
 
             return transforms;
+        }
+
+        public void MarkPlayerAsDead(Transform player)
+        {
+            deadPlayers.Add(player);
+        }
+
+        public void MarkPlayerAsAlive(Transform player)
+        {
+            deadPlayers.Remove(player);
         }
     }
 }
