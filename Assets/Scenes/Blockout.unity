@@ -693,9 +693,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PlayerPowerUps.PowerUpSpawner
   spawnArea: {fileID: 1934357231}
-  powerUpPrefabs:
-  - {fileID: 6359157464530998412, guid: 50391663ad2052c438a42d72b700b3aa, type: 3}
-  - {fileID: 6359157464530998412, guid: 7a60883ca5cf268468b0d39f0b2b8d7c, type: 3}
+  powerUpPool:
+  - prefab: {fileID: 6359157464530998412, guid: 57d2e72ea34d4584f9c12d069493932b, type: 3}
+    weight: 50
+  - prefab: {fileID: 6359157464530998412, guid: e98b581c0a9516f4f97569e3b0bc884d, type: 3}
+    weight: 50
   initialDelay: 2
   minSpawnInterval: 4
   maxSpawnInterval: 8

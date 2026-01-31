@@ -6,19 +6,24 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PlayerPowerUpController : MonoBehaviour
     {
-        [SerializeField] private PlayerStats stats;
+        [SerializeField] private PlayerController playerController;
         [SerializeField] private FloatingText floatingTextPrefab;
 
         private readonly Dictionary<PowerUpEffect, Coroutine> running = new();
 
         private void Awake()
         {
-            if (stats == null) stats = GetComponent<PlayerStats>();
+            if (playerController == null) playerController = GetComponent<PlayerController>();
         }
 
         public void ApplyPowerUp(PowerUpEffect effect)
         {
-            if (effect == null || stats == null) return;
+            if (effect == null)  return;
+
+            if(playerController == null)
+            {
+                playerController = GetComponent<PlayerController>();
+            }
 
             // Se lo stesso power-up viene ripreso: refresh durata (semplice e funzionale)
             if (running.TryGetValue(effect, out var c) && c != null)
@@ -27,19 +32,19 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
                 running.Remove(effect);
             }
 
-            stats.Apply(effect.modifiers);
+            playerController.ApplyPowerUp(effect);
             ShowText(effect.pickupText);
 
-            if (effect.durationSeconds > 0f)
-            {
-                running[effect] = StartCoroutine(RemoveAfter(effect));
-            }
+            //if (effect.durationSeconds > 0f)
+            //{
+            //    running[effect] = StartCoroutine(RemoveAfter(effect));
+            //}
         }
 
         private IEnumerator RemoveAfter(PowerUpEffect effect)
         {
             yield return new WaitForSeconds(effect.durationSeconds);
-            stats.Remove(effect.modifiers);
+            //playerController.(effect.modifiers);
             running.Remove(effect);
         }
 

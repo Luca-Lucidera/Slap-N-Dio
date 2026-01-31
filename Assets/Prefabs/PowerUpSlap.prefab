@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede2bd0e93fd8ee458677ac63d2e99c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PowerUpPickup
-  effect: {fileID: 11400000, guid: fb890636d3482cc4e8d7969744a55059, type: 2}
+  effect: {fileID: 11400000, guid: 6e0a74233549d1348879fa0f26c242ce, type: 2}
   objectToDestroy: {fileID: 0}
 --- !u!1 &6359157464530998412
 GameObject:
@@ -222,4 +222,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c362f6f11519745874c1db515b4a36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.CubeDemonstratePhysic
-  force: 250
+  force: 50
