@@ -14,6 +14,7 @@ namespace Assets.Scripts.Runtime
         [Header("Smoothing")]
         [SerializeField] private float positionSmoothSpeed = 3f;
         [SerializeField] private float zoomSmoothSpeed = 2f;
+        [SerializeField] private float centerSmoothSpeed = 4f;
 
         [Header("Camera Angle")]
         [SerializeField] private float cameraAngle = 45f;
@@ -21,6 +22,9 @@ namespace Assets.Scripts.Runtime
         private float currentDistance;
         private Vector3 currentVelocity;
         private float distanceVelocity;
+        private Vector3 smoothedCenter;
+        private Vector3 centerVelocity;
+        private bool initialized = false;
 
         private void Start()
         {
@@ -34,17 +38,28 @@ namespace Assets.Scripts.Runtime
             var playerTransforms = playerManager.GetActivePlayerTransforms();
             if (playerTransforms.Count == 0) return;
 
-            Vector3 centerPoint = CalculateCenterPoint(playerTransforms);
-            float playerSpread = CalculatePlayerSpread(playerTransforms, centerPoint);
+            Vector3 targetCenter = CalculateCenterPoint(playerTransforms);
+
+            // Inizializza smoothedCenter al primo frame
+            if (!initialized)
+            {
+                smoothedCenter = targetCenter;
+                initialized = true;
+            }
+
+            // Smooth del centro (questo elimina lo scatto!)
+            smoothedCenter = Vector3.SmoothDamp(smoothedCenter, targetCenter, ref centerVelocity, 1f / centerSmoothSpeed);
+
+            float playerSpread = CalculatePlayerSpread(playerTransforms, smoothedCenter);
             float targetDistance = CalculateTargetDistance(playerTransforms.Count, playerSpread);
 
             currentDistance = Mathf.SmoothDamp(currentDistance, targetDistance, ref distanceVelocity, 1f / zoomSmoothSpeed);
 
-            Vector3 targetPosition = CalculateCameraPosition(centerPoint, currentDistance);
+            Vector3 targetPosition = CalculateCameraPosition(smoothedCenter, currentDistance);
 
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, 1f / positionSmoothSpeed);
 
-            transform.LookAt(centerPoint);
+            transform.LookAt(smoothedCenter);
         }
 
         private Vector3 CalculateCenterPoint(System.Collections.Generic.List<Transform> players)
