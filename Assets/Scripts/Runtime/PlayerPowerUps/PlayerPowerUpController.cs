@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime
+namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PlayerPowerUpController : MonoBehaviour
     {
         [SerializeField] private PlayerStats stats;
         [SerializeField] private FloatingText floatingTextPrefab;
 
-        private readonly Dictionary<PowerUpEffectSO, Coroutine> running = new();
+        private readonly Dictionary<PowerUpEffect, Coroutine> running = new();
 
         private void Awake()
         {
             if (stats == null) stats = GetComponent<PlayerStats>();
         }
 
-        public void ApplyPowerUp(PowerUpEffectSO effect)
+        public void ApplyPowerUp(PowerUpEffect effect)
         {
             if (effect == null || stats == null) return;
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Runtime
             }
         }
 
-        private IEnumerator RemoveAfter(PowerUpEffectSO effect)
+        private IEnumerator RemoveAfter(PowerUpEffect effect)
         {
             yield return new WaitForSeconds(effect.durationSeconds);
             stats.Remove(effect.modifiers);

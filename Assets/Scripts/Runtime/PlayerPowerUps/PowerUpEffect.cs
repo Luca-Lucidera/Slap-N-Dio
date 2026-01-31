@@ -1,8 +1,9 @@
 using UnityEngine;
+using System;
 
-namespace Assets.Scripts.Runtime
+namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
-    [System.Serializable]
+    [Serializable]
     public struct PowerUpModifiers
     {
         public float moveSpeedMultiplier;
@@ -27,7 +28,7 @@ namespace Assets.Scripts.Runtime
     }
 
     [CreateAssetMenu(menuName = "GameJam/PowerUp Effect", fileName = "PowerUpEffect_")]
-    public class PowerUpEffectSO : ScriptableObject
+    public class PowerUpEffect : ScriptableObject
     {
         [Header("UI")]
         public string powerUpName = "POWER UP";

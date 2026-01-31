@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 5981807346438504182}
   - component: {fileID: 3904465144984709986}
   - component: {fileID: -651831457711803471}
+  - component: {fileID: -3091069509042794393}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Player Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,3 +155,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.CubeDemonstratePhysic
   force: 120
+--- !u!114 &-3091069509042794393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6359157464530998412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2464839aa02e7443b32e4ccbcd908f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PlayerPowerUps.PlayerStats
+  baseMoveSpeed: 5
+  baseSlapForce: 10
+  baseSlapCooldown: 0.8
+  baseSlapRadius: 1
+  baseScale: 1
+  baseMassMultiplier: 1

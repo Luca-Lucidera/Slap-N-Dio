@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime
+namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PowerUpPickup : MonoBehaviour
     {
         [Header("Effect")]
-        [SerializeField] private PowerUpEffectSO effect;
+        [SerializeField] private PowerUpEffect effect;
 
         [Header("Destroy")]
         [SerializeField] private Transform objectToDestroy; // lascia vuoto: prende il root

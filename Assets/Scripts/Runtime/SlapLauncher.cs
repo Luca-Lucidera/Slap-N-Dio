@@ -1,3 +1,4 @@
+using Assets.Scripts.Runtime.PlayerPowerUps;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

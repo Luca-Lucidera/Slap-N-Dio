@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime
+namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PowerUpSpawner : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Assets.Scripts.Runtime
+namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PlayerStats : MonoBehaviour
     {
