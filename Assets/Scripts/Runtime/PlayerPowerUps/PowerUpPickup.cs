@@ -24,7 +24,7 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
             if (effect == null) return;
 
             // Prende il PlayerController anche se il collider è su un child del player
-            var player = other.GetComponentInParent<PlayerController>();
+            var player = other.GetComponent<PlayerPowerUpController>();
             if (player == null) return;
 
             collected = true;
