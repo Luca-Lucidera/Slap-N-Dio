@@ -694,10 +694,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PlayerPowerUps.PowerUpSpawner
   spawnArea: {fileID: 1934357231}
   powerUpPool:
-  - prefab: {fileID: 6359157464530998412, guid: 57d2e72ea34d4584f9c12d069493932b, type: 3}
-    weight: 100
-  - prefab: {fileID: 6359157464530998412, guid: 57d2e72ea34d4584f9c12d069493932b, type: 3}
-    weight: 100
+  - prefab: {fileID: 6359157464530998412, guid: e98b581c0a9516f4f97569e3b0bc884d, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: b5753497c998e514fbe942653583990c, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: bbed73fcdf6d795438287be101088419, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: b1f8d748c6d587646a7a3138259372d6, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: 03c97deb1fd97cd48b33dbae6653c119, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: ec63118748ba59144a69b1bb9dc0f3f0, type: 3}
+    weight: 14.285
+  - prefab: {fileID: 6359157464530998412, guid: e141058644a452943914f79931df01e9, type: 3}
+    weight: 14.285
   initialDelay: 2
   minSpawnInterval: 4
   maxSpawnInterval: 8
