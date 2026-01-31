@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,9 @@ namespace Assets.Scripts.Runtime
 
         private Gamepad assignedGamepad;
         private bool useKeyboard;
+
+        private float speedMultiplier = 1f;
+        private Coroutine speedRoutine;
 
         public void Initialize(Gamepad gamepad)
         {
@@ -33,8 +37,25 @@ namespace Assets.Scripts.Runtime
             if (movement.sqrMagnitude > 0f)
             {
                 movement.Normalize();
-                transform.position += movement * moveSpeed * Time.deltaTime;
+                float finalSpeed = moveSpeed * speedMultiplier;
+                transform.position += movement * finalSpeed * Time.deltaTime;
             }
+        }
+
+        public void ApplySpeedMultiplier(float multiplier, float durationSeconds)
+        {
+            if (speedRoutine != null)
+                StopCoroutine(speedRoutine);
+
+            speedRoutine = StartCoroutine(SpeedMultiplierRoutine(multiplier, durationSeconds));
+        }
+
+        private IEnumerator SpeedMultiplierRoutine(float multiplier, float durationSeconds)
+        {
+            speedMultiplier = Mathf.Max(0f, multiplier);
+            yield return new WaitForSeconds(durationSeconds);
+            speedMultiplier = 1f;
+            speedRoutine = null;
         }
 
         private Vector3 GetKeyboardInput()
