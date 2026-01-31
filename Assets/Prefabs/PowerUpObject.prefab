@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PowerUpPickup
   type: 0
-  speedMultiplier: 1.75
+  speedMultiplier: 7.5
   durationSeconds: 5
   floatingTextPrefab: {fileID: 48482073153773808, guid: 3f251e99d40898d489ed442682e85510, type: 3}
   speedBoostText: DioLesto
