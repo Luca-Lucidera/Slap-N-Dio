@@ -1,9 +1,5 @@
-﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -12,7 +8,7 @@ namespace Assets.Scripts.Runtime.UI
 {
     class PressAnyButtonToLoadPlayerScene : MonoBehaviour
     {
-        [SerializeField] private SceneAsset sceneToLoad;
+        [SerializeField] private int sceneToLoadBuildIndex = 1;
         private Coroutine m_CoLoadScene;
         private TextMeshProUGUI m_text;
 
@@ -36,10 +32,10 @@ namespace Assets.Scripts.Runtime.UI
         {
             m_text.text = $"Caricamento in corso...";
 
-            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoad.name, LoadSceneMode.Single);
+            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneToLoadBuildIndex, LoadSceneMode.Single);
             operation.allowSceneActivation = false;
 
-            while (operation.progress <= 0.8)
+            while (operation.progress <= 0.8f)
             {
                 yield return null;
             }

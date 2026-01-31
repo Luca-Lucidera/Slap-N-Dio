@@ -18,6 +18,9 @@ namespace Assets.Scripts.Runtime
         [Header("Settings")]
         [SerializeField] private float moveSpeed = 5f;
 
+        [Header("Disconnect UI")]
+        [SerializeField] private GameObject disconnectOverlay;
+
         private static readonly Vector3[] SpawnPositions = new Vector3[]
         {
             new Vector3(-3f, 0.5f, 0f),
@@ -28,8 +31,10 @@ namespace Assets.Scripts.Runtime
 
         private GameObject keyboardPlayer;
         private Dictionary<int, GameObject> gamepadPlayers = new Dictionary<int, GameObject>();
-        private List<int> gamepadSlots = new List<int>();
+        private Dictionary<int, int> deviceIdToSlot = new Dictionary<int, int>();
         private HashSet<Transform> deadPlayers = new HashSet<Transform>();
+        private HashSet<int> registeredGamepadIds = new HashSet<int>();
+        private bool isPausedForDisconnect = false;
 
         private void OnEnable()
         {
@@ -43,22 +48,85 @@ namespace Assets.Scripts.Runtime
 
         private void Start()
         {
-            SpawnKeyboardPlayer();
-            
-            foreach (var device in InputSystem.devices)
-            {
-                if (device is Gamepad gamepad)
-                {
-                    TrySpawnGamepadPlayer(gamepad);
-                }
-            }
+            SpawnPlayersFromSessionData();
         }
 
-        private void SpawnKeyboardPlayer()
+        private void SpawnPlayersFromSessionData()
         {
-            keyboardPlayer = CreatePlayerCube("Player1_Keyboard", SpawnPositions[0], blueMaterial);
+            if (PlayerSessionData.Instance == null)
+            {
+                Debug.LogWarning("[PlayerManager] PlayerSessionData not found. Spawning default keyboard player.");
+                SpawnKeyboardPlayer(0);
+                return;
+            }
+
+            var joinedPlayers = PlayerSessionData.Instance.JoinedPlayers;
+            if (joinedPlayers.Count == 0)
+            {
+                Debug.LogWarning("[PlayerManager] No joined players in session data. Spawning default keyboard player.");
+                SpawnKeyboardPlayer(0);
+                return;
+            }
+
+            foreach (var playerInfo in joinedPlayers)
+            {
+                if (playerInfo.IsKeyboard)
+                {
+                    SpawnKeyboardPlayer(playerInfo.SlotIndex);
+                }
+                else
+                {
+                    // Find the gamepad by device ID
+                    Gamepad gamepad = FindGamepadByDeviceId(playerInfo.GamepadDeviceId);
+                    if (gamepad != null)
+                    {
+                        SpawnGamepadPlayer(gamepad, playerInfo.SlotIndex);
+                        registeredGamepadIds.Add(playerInfo.GamepadDeviceId);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[PlayerManager] Gamepad {playerInfo.GamepadDeviceId} not found for slot {playerInfo.SlotIndex}");
+                    }
+                }
+            }
+
+            Debug.Log($"[PlayerManager] Spawned {joinedPlayers.Count} players from session data");
+        }
+
+        private Gamepad FindGamepadByDeviceId(int deviceId)
+        {
+            foreach (var device in InputSystem.devices)
+            {
+                if (device is Gamepad gamepad && gamepad.deviceId == deviceId)
+                {
+                    return gamepad;
+                }
+            }
+            return null;
+        }
+
+        private void SpawnKeyboardPlayer(int slotIndex)
+        {
+            keyboardPlayer = CreatePlayerCube($"Player{slotIndex + 1}_Keyboard", SpawnPositions[slotIndex], GetMaterialForSlot(slotIndex));
             var controller = keyboardPlayer.AddComponent<PlayerController>();
             controller.Initialize(null);
+            Debug.Log($"[PlayerManager] Spawned keyboard player in slot {slotIndex}");
+        }
+
+        private void SpawnGamepadPlayer(Gamepad gamepad, int slotIndex)
+        {
+            Material material = GetMaterialForSlot(slotIndex);
+            Vector3 position = SpawnPositions[slotIndex];
+
+            string playerName = $"Player{slotIndex + 1}_Gamepad";
+            GameObject player = CreatePlayerCube(playerName, position, material);
+            var controller = player.AddComponent<PlayerController>();
+            controller.Initialize(gamepad);
+
+            gamepadPlayers[gamepad.deviceId] = player;
+            deviceIdToSlot[gamepad.deviceId] = slotIndex;
+
+            Debug.Log($"[PlayerManager] Spawned {playerName} for gamepad {gamepad.deviceId}");
         }
 
         private void HandleDeviceChange(InputDevice device, InputDeviceChange change)
@@ -67,96 +135,81 @@ namespace Assets.Scripts.Runtime
 
             switch (change)
             {
-                case InputDeviceChange.Added:
-                case InputDeviceChange.Reconnected:
-                    TrySpawnGamepadPlayer(gamepad);
-                    break;
-
                 case InputDeviceChange.Removed:
                 case InputDeviceChange.Disconnected:
-                    RemoveGamepadPlayer(gamepad);
+                    HandleGamepadDisconnected(gamepad);
+                    break;
+
+                case InputDeviceChange.Added:
+                case InputDeviceChange.Reconnected:
+                    HandleGamepadReconnected(gamepad);
                     break;
             }
         }
 
-        private void TrySpawnGamepadPlayer(Gamepad gamepad)
+        private void HandleGamepadDisconnected(Gamepad gamepad)
         {
-            if (gamepadPlayers.ContainsKey(gamepad.deviceId)) return;
-            if (gamepadSlots.Count >= 3) return;
+            // Only pause if this was a registered player's gamepad
+            if (!registeredGamepadIds.Contains(gamepad.deviceId)) return;
 
-            int slotIndex = GetNextAvailableSlot();
-            if (slotIndex < 0) return;
-
-            int playerIndex = slotIndex + 1;
-            Material material = GetMaterialForSlot(slotIndex);
-            Vector3 position = SpawnPositions[playerIndex];
-
-            string playerName = $"Player{playerIndex + 1}_Gamepad{slotIndex + 1}";
-            GameObject player = CreatePlayerCube(playerName, position, material);
-            var controller = player.AddComponent<PlayerController>();
-            controller.Initialize(gamepad);
-
-            gamepadPlayers[gamepad.deviceId] = player;
-            gamepadSlots.Add(slotIndex);
-
-            Debug.Log($"[PlayerManager] Spawned {playerName} for gamepad {gamepad.deviceId}");
+            Debug.Log($"[PlayerManager] Registered gamepad {gamepad.deviceId} disconnected. Pausing game.");
+            PauseForDisconnect();
         }
 
-        private void RemoveGamepadPlayer(Gamepad gamepad)
+        private void HandleGamepadReconnected(Gamepad gamepad)
         {
-            if (!gamepadPlayers.TryGetValue(gamepad.deviceId, out GameObject player)) return;
+            // Check if this is a registered gamepad that reconnected
+            if (!registeredGamepadIds.Contains(gamepad.deviceId)) return;
 
-            int slotIndex = gamepadSlots.FindIndex(s => gamepadPlayers[gamepad.deviceId] == player);
-            
-            gamepadPlayers.Remove(gamepad.deviceId);
-            
-            for (int i = 0; i < gamepadSlots.Count; i++)
+            Debug.Log($"[PlayerManager] Registered gamepad {gamepad.deviceId} reconnected. Resuming game.");
+            ResumeFromDisconnect();
+        }
+
+        private void PauseForDisconnect()
+        {
+            if (isPausedForDisconnect) return;
+
+            isPausedForDisconnect = true;
+            Time.timeScale = 0f;
+
+            if (disconnectOverlay != null)
             {
-                if (gamepadPlayers.ContainsKey(gamepad.deviceId) == false)
+                disconnectOverlay.SetActive(true);
+            }
+        }
+
+        private void ResumeFromDisconnect()
+        {
+            if (!isPausedForDisconnect) return;
+
+            // Check if all registered gamepads are connected
+            foreach (int deviceId in registeredGamepadIds)
+            {
+                if (FindGamepadByDeviceId(deviceId) == null)
                 {
-                    var keys = new List<int>(gamepadPlayers.Keys);
-                    bool found = false;
-                    foreach (var key in keys)
-                    {
-                        if (gamepadPlayers[key] == player)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found && slotIndex >= 0)
-                    {
-                        gamepadSlots.Remove(slotIndex);
-                        break;
-                    }
+                    Debug.Log($"[PlayerManager] Still waiting for gamepad {deviceId} to reconnect.");
+                    return;
                 }
             }
 
-            if (player != null)
-            {
-                Debug.Log($"[PlayerManager] Removed player for gamepad {gamepad.deviceId}");
-                Destroy(player);
-            }
-        }
+            isPausedForDisconnect = false;
+            Time.timeScale = 1f;
 
-        private int GetNextAvailableSlot()
-        {
-            for (int i = 0; i < 3; i++)
+            if (disconnectOverlay != null)
             {
-                if (!gamepadSlots.Contains(i))
-                    return i;
+                disconnectOverlay.SetActive(false);
             }
-            return -1;
         }
 
         private Material GetMaterialForSlot(int slotIndex)
         {
             return slotIndex switch
             {
-                0 => redMaterial,
-                1 => greenMaterial,
-                2 => yellowMaterial,
-                _ => redMaterial
+                0 => blueMaterial,
+                1 => redMaterial,
+                2 => greenMaterial,
+                3 => yellowMaterial,
+                _ => blueMaterial
             };
         }
 
