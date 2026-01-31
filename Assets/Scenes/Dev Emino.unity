@@ -474,6 +474,7 @@ MonoBehaviour:
   yellowMaterial: {fileID: 0}
   playerPrefab: {fileID: 6359157464530998412, guid: 544f444da4ac9154589695898d29a82f, type: 3}
   moveSpeed: 5
+  disconnectOverlay: {fileID: 0}
 --- !u!4 &856900002
 Transform:
   m_ObjectHideFlags: 0
@@ -670,8 +671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PowerUpSpawner
   spawnArea: {fileID: 1210655015}
-  powerUpPrefabs:
-  - {fileID: 6359157464530998412, guid: 50391663ad2052c438a42d72b700b3aa, type: 3}
+  powerUpPool: []
   initialDelay: 2
   minSpawnInterval: 4
   maxSpawnInterval: 8

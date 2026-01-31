@@ -8,7 +8,7 @@ namespace Assets.Scripts.Runtime
         [SerializeField] private PowerUpEffectSO effect;
 
         [Header("Destroy")]
-        [SerializeField] private Transform objectToDestroy; // lascia vuoto: prende il root
+        [SerializeField] private Transform objectToDestroy; // se vuoto: prende il root
 
         private bool collected;
 
@@ -21,8 +21,10 @@ namespace Assets.Scripts.Runtime
         private void OnTriggerEnter(Collider other)
         {
             if (collected) return;
+            if (effect == null) return;
 
-            var player = other.GetComponentInParent<PlayerPowerUpController>();
+            // Prende il PlayerController anche se il collider è su un child del player
+            var player = other.GetComponentInParent<PlayerController>();
             if (player == null) return;
 
             collected = true;
