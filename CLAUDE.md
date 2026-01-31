@@ -35,6 +35,94 @@ This project includes `com.coplaydev.unity-mcp` for direct Unity Editor interact
 **Input System:**
 - Uses Unity's new Input System
 - Actions defined in `Assets/InputSystem_Actions.inputactions`
+- Supporta tastiera + fino a 3 gamepad simultanei
+
+## Game Systems Architecture
+
+### 1. Player Management System (`PlayerManager.cs`)
+
+**Responsabilità:**
+- Gestione centralizzata di tutti i player attivi
+- Rilevamento automatico dispositivi via `InputSystem.onDeviceChange`
+- Supporta 1 tastiera + max 3 gamepad simultanei
+
+**Struttura:**
+- `keyboardPlayer` - Player controllato da tastiera (sempre attivo)
+- `gamepadPlayers` - Dictionary<int, GameObject> per mapping deviceId → Player
+- `deadPlayers` - HashSet<Transform> per tracking player morti
+
+**Spawn Positions e Colori:**
+| Slot | Dispositivo | Posizione | Colore |
+|------|-------------|-----------|--------|
+| 0 | Tastiera | [-3, 0.5, 0] | Blu |
+| 1 | Gamepad 1 | [-1, 0.5, 0] | Rosso |
+| 2 | Gamepad 2 | [1, 0.5, 0] | Verde |
+| 3 | Gamepad 3 | [3, 0.5, 0] | Giallo |
+
+### 2. Player Controller (`PlayerController.cs`)
+
+**Controlli:**
+- Tastiera: WASD per movimento 3D
+- Gamepad: Left Stick analogico (deadzone 0.1)
+
+**Inizializzazione:**
+- `Initialize(null)` → modalità tastiera
+- `Initialize(gamepad)` → modalità gamepad
+
+### 3. Camera System (`CameraController.cs`)
+
+**Parametri configurabili:**
+- `minDistance = 15f` - Distanza minima
+- `maxDistance = 35f` - Distanza massima
+- `positionSmoothSpeed = 3f`
+- `zoomSmoothSpeed = 2f`
+- `centerSmoothSpeed = 4f`
+- `cameraAngle = 45f` - Angolo isometrico
+
+**Algoritmo Zoom:**
+1. Calcola centro (baricentro) dei player attivi
+2. Calcola spread tra player
+3. `targetDistance = Lerp(min, max, Max(countFactor, spreadFactor))`
+4. Applica SmoothDamp su tutti i parametri
+
+**Integrazione:**
+- Usa `PlayerManager.GetActivePlayerTransforms()` per ottenere player vivi
+- Esclude automaticamente player morti dal calcolo
+
+### 4. Kill & Respawn System (`KillY.cs`)
+
+**Flusso:**
+1. Player entra in trigger zone (Y negativo)
+2. `playerManager.MarkPlayerAsDead(transform)`
+3. Player disattivato
+4. Attesa 5 secondi
+5. Teleport a `respawnPoint`
+6. Player riattivato
+7. `playerManager.MarkPlayerAsAlive(transform)`
+
+**Oggetti non-player:** Distrutti immediatamente
+
+### 5. Altri Script
+- `CubeDemonstratePhysic.cs` - Genera e lancia cubi con SPACE
+- `SlapCube.cs` - Auto-distruzione cubi dopo collisione (1s delay)
+
+### Diagramma Architettura
+```
+InputSystem.onDeviceChange
+    ↓
+PlayerManager (Core)
+    ├── SpawnKeyboardPlayer() / TrySpawnGamepadPlayer()
+    ├── RemoveGamepadPlayer()
+    ├── MarkPlayerAsDead() / MarkPlayerAsAlive()
+    └── GetActivePlayerTransforms()
+            ↓
+    ┌───────┴───────┐
+    ↓               ↓
+PlayerController  CameraController
+(Input/Movement)  (Tracking/Zoom)
+    ↓
+KillY (Respawn) ←───┘
+```
 
 ## Testing
 
