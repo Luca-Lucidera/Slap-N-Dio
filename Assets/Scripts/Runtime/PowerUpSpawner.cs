@@ -20,6 +20,9 @@ namespace Assets.Scripts.Runtime
         [Header("Limits")]
         [SerializeField] private int maxPowerUpsAlive = 3;
 
+        [Header("Spawn Padding (no spawn near edges)")]
+        [SerializeField] private float edgePadding = 2f;
+
         [Header("Ground")]
         [SerializeField] private LayerMask groundLayer;
         [SerializeField] private float groundRaycastExtraHeight = 10f;
@@ -89,7 +92,6 @@ namespace Assets.Scripts.Runtime
                 {
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
-                    // Se vuoi ridurre il rischio di attraversare il terreno:
                     rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 }
 
@@ -103,8 +105,22 @@ namespace Assets.Scripts.Runtime
             groundPoint = Vector3.zero;
 
             Bounds b = spawnArea.bounds;
-            float x = Random.Range(b.min.x, b.max.x);
-            float z = Random.Range(b.min.z, b.max.z);
+
+            // Padding "interno" per non spawnare vicino ai bordi.
+            // Lo clampiamo a >= 0 e verifichiamo che resti spazio disponibile.
+            float pad = Mathf.Max(0f, edgePadding);
+
+            float minX = b.min.x + pad;
+            float maxX = b.max.x - pad;
+            float minZ = b.min.z + pad;
+            float maxZ = b.max.z - pad;
+
+            // Se il padding è troppo grande, non c'è area valida.
+            if (minX >= maxX || minZ >= maxZ)
+                return false;
+
+            float x = Random.Range(minX, maxX);
+            float z = Random.Range(minZ, maxZ);
 
             // parto da sopra l'area e tiro giù
             Vector3 rayStart = new Vector3(x, b.max.y + groundRaycastExtraHeight, z);
@@ -120,7 +136,6 @@ namespace Assets.Scripts.Runtime
 
         private bool IsTooCloseToAnyPlayer(Vector3 point)
         {
-            // Per 4 player va benissimo farlo così: semplice e robusto
             var players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
             for (int i = 0; i < players.Length; i++)
             {
