@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +7,33 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
 {
     public class PlayerPowerUpController : MonoBehaviour
     {
+        public event Action<string> OnPowerUpTextChanged;
+
         [SerializeField] private PlayerController playerController;
         [SerializeField] private FloatingText floatingTextPrefab;
 
         private readonly Dictionary<PowerUpEffect, Coroutine> running = new();
+        private string currentPowerUpName;
 
         private void Awake()
         {
             if (playerController == null) playerController = GetComponent<PlayerController>();
+        }
+
+        private void OnEnable()
+        {
+            if (playerController != null)
+            {
+                playerController.OnPowerUpExpired += HandlePowerUpExpired;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (playerController != null)
+            {
+                playerController.OnPowerUpExpired -= HandlePowerUpExpired;
+            }
         }
 
         public void ApplyPowerUp(PowerUpEffect effect)
@@ -35,16 +55,27 @@ namespace Assets.Scripts.Runtime.PlayerPowerUps
             playerController.ApplyPowerUp(effect);
             ShowText(effect.pickupText);
 
-            //if (effect.durationSeconds > 0f)
-            //{
-            //    running[effect] = StartCoroutine(RemoveAfter(effect));
-            //}
+            // Notifica la UI del powerup attivo
+            currentPowerUpName = effect.powerUpName;
+            OnPowerUpTextChanged?.Invoke(currentPowerUpName);
+
+            if (effect.durationSeconds > 0f)
+            {
+                running[effect] = StartCoroutine(TrackPowerUpDuration(effect));
+            }
         }
 
-        private IEnumerator RemoveAfter(PowerUpEffect effect)
+        private void HandlePowerUpExpired(PowerUpEffect effect)
+        {
+            running.Remove(effect);
+            // Quando un powerup scade, svuota il testo
+            currentPowerUpName = "";
+            OnPowerUpTextChanged?.Invoke(currentPowerUpName);
+        }
+
+        private IEnumerator TrackPowerUpDuration(PowerUpEffect effect)
         {
             yield return new WaitForSeconds(effect.durationSeconds);
-            //playerController.(effect.modifiers);
             running.Remove(effect);
         }
 

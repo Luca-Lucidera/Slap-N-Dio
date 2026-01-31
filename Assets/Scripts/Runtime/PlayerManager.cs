@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,6 +7,9 @@ namespace Assets.Scripts.Runtime
 {
     public class PlayerManager : MonoBehaviour
     {
+        public event Action<int, int> OnPlayerLivesChanged; // (slotIndex, livesRemaining)
+        public event Action<int> OnPlayerEliminated; // (slotIndex)
+
         [Header("Player Materials")]
         [SerializeField] private Material blueMaterial;
         [SerializeField] private Material redMaterial;
@@ -35,6 +39,12 @@ namespace Assets.Scripts.Runtime
         private HashSet<Transform> deadPlayers = new HashSet<Transform>();
         private HashSet<int> registeredGamepadIds = new HashSet<int>();
         private bool isPausedForDisconnect = false;
+
+        // Sistema vite
+        private const int MaxLives = 3;
+        private Dictionary<Transform, int> playerLives = new Dictionary<Transform, int>();
+        private Dictionary<Transform, int> playerSlotIndex = new Dictionary<Transform, int>();
+        private HashSet<Transform> eliminatedPlayers = new HashSet<Transform>();
 
         private void OnEnable()
         {
@@ -110,6 +120,10 @@ namespace Assets.Scripts.Runtime
             keyboardPlayer = CreatePlayerCube($"Player{slotIndex + 1}_Keyboard", SpawnPositions[slotIndex], GetMaterialForSlot(slotIndex));
             var controller = keyboardPlayer.AddComponent<PlayerController>();
             controller.Initialize(null);
+
+            // Registra vite e slot
+            RegisterPlayerLives(keyboardPlayer.transform, slotIndex);
+
             Debug.Log($"[PlayerManager] Spawned keyboard player in slot {slotIndex}");
         }
 
@@ -125,6 +139,9 @@ namespace Assets.Scripts.Runtime
 
             gamepadPlayers[gamepad.deviceId] = player;
             deviceIdToSlot[gamepad.deviceId] = slotIndex;
+
+            // Registra vite e slot
+            RegisterPlayerLives(player.transform, slotIndex);
 
             Debug.Log($"[PlayerManager] Spawned {playerName} for gamepad {gamepad.deviceId}");
         }
@@ -251,6 +268,70 @@ namespace Assets.Scripts.Runtime
         public void MarkPlayerAsAlive(Transform player)
         {
             deadPlayers.Remove(player);
+        }
+
+        private void RegisterPlayerLives(Transform player, int slotIndex)
+        {
+            playerLives[player] = MaxLives;
+            playerSlotIndex[player] = slotIndex;
+        }
+
+        /// <summary>
+        /// Decrementa una vita al player.
+        /// </summary>
+        /// <returns>true se può respawnare, false se eliminato definitivamente</returns>
+        public bool DecrementLife(Transform player)
+        {
+            if (eliminatedPlayers.Contains(player))
+            {
+                return false;
+            }
+
+            if (!playerLives.ContainsKey(player))
+            {
+                Debug.LogWarning($"[PlayerManager] Player {player.name} not registered in lives system");
+                return true;
+            }
+
+            playerLives[player]--;
+            int livesRemaining = playerLives[player];
+            int slotIndex = playerSlotIndex[player];
+
+            OnPlayerLivesChanged?.Invoke(slotIndex, livesRemaining);
+
+            if (livesRemaining <= 0)
+            {
+                eliminatedPlayers.Add(player);
+                OnPlayerEliminated?.Invoke(slotIndex);
+                Debug.Log($"[PlayerManager] Player {player.name} eliminated!");
+                return false;
+            }
+
+            Debug.Log($"[PlayerManager] Player {player.name} lost a life. Remaining: {livesRemaining}");
+            return true;
+        }
+
+        public int GetSlotIndex(Transform player)
+        {
+            if (playerSlotIndex.TryGetValue(player, out int slot))
+            {
+                return slot;
+            }
+            return -1;
+        }
+
+        public int GetLives(Transform player)
+        {
+            if (playerLives.TryGetValue(player, out int lives))
+            {
+                return lives;
+            }
+            return 0;
+        }
+
+        public bool IsPlayerEliminated(Transform player)
+        {
+            return eliminatedPlayers.Contains(player);
         }
     }
 }

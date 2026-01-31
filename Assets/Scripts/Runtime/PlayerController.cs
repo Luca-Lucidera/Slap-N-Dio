@@ -1,4 +1,5 @@
 using Assets.Scripts.Runtime.PlayerPowerUps;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,9 @@ namespace Assets.Scripts.Runtime
 {
     public class PlayerController : MonoBehaviour
     {
+        public event Action<PowerUpEffect> OnPowerUpAcquired;
+        public event Action<PowerUpEffect> OnPowerUpExpired;
+
         [Header("Movement")]
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float deadzone = 0.1f;
@@ -87,6 +91,7 @@ namespace Assets.Scripts.Runtime
             }
 
             ApplyModifiers(effect.modifiers);
+            OnPowerUpAcquired?.Invoke(effect);
 
             if (effect.durationSeconds > 0f)
             {
@@ -99,6 +104,7 @@ namespace Assets.Scripts.Runtime
             yield return new WaitForSeconds(effect.durationSeconds);
             RemoveModifiers(effect.modifiers);
             activeEffects.Remove(effect);
+            OnPowerUpExpired?.Invoke(effect);
         }
 
         private void ApplyModifiers(PowerUpModifiers m)

@@ -36,8 +36,17 @@ namespace Assets.Scripts.Runtime
 
         private IEnumerator RespawnPlayer(GameObject player)
         {
+            // Decrementa vita e controlla se può respawnare
+            bool canRespawn = playerManager != null && playerManager.DecrementLife(player.transform);
+
             playerManager?.MarkPlayerAsDead(player.transform);
             player.SetActive(false);
+
+            if (!canRespawn)
+            {
+                // Player eliminato definitivamente
+                yield break;
+            }
 
             yield return waitForSeconds;
 
