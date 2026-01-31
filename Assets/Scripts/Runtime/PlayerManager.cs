@@ -12,6 +12,9 @@ namespace Assets.Scripts.Runtime
         [SerializeField] private Material greenMaterial;
         [SerializeField] private Material yellowMaterial;
 
+        [Header("Player Prefab")]
+        [SerializeField] private GameObject playerPrefab;
+
         [Header("Settings")]
         [SerializeField] private float moveSpeed = 5f;
 
@@ -158,9 +161,8 @@ namespace Assets.Scripts.Runtime
 
         private GameObject CreatePlayerCube(string name, Vector3 position, Material material)
         {
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject cube = Instantiate(playerPrefab, position, Quaternion.identity);
             cube.name = name;
-            cube.transform.position = position;
 
             var renderer = cube.GetComponent<MeshRenderer>();
             if (renderer != null && material != null)
