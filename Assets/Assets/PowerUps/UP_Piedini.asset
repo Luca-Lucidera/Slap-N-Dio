@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 29f13fc0407774444982b7530e6fa9ad, type: 3}
   m_Name: UP_Piedini
   m_EditorClassIdentifier: Assembly-CSharp:Assets.Scripts.Runtime:PowerUpEffectSO
   powerUpName: POWER UP
-  pickupText: Speed Up!
-  durationSeconds: 6
+  pickupText: Power up!
+  durationSeconds: 5
   modifiers:
-    moveSpeedMultiplier: 1.5
+    moveSpeedMultiplier: 2
     slapForceMultiplier: 1
     slapCooldownMultiplier: 1
     slapRadiusMultiplier: 1

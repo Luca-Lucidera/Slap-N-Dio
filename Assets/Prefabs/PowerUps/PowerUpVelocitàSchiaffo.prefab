@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede2bd0e93fd8ee458677ac63d2e99c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PowerUpPickup
-  effect: {fileID: 11400000, guid: 6e0a74233549d1348879fa0f26c242ce, type: 2}
+  effect: {fileID: 11400000, guid: 11ed37613acf0ea48b540b14ce82d633, type: 2}
   objectToDestroy: {fileID: 0}
 --- !u!1 &6359157464530998412
 GameObject:
@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 3904465144984709986}
   - component: {fileID: -651831457711803471}
   m_Layer: 0
-  m_Name: PowerUpSlap
+  m_Name: "PowerUpVelocit\xE0Schiaffo"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
