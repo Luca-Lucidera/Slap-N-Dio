@@ -16,7 +16,7 @@ MonoBehaviour:
   pickupText: Piedini taglia 36 e mezzo
   durationSeconds: 10
   modifiers:
-    moveSpeedMultiplier: 10
+    moveSpeedMultiplier: 2
     slapForceMultiplier: 1
     slapCooldownMultiplier: 1
     slapRadiusMultiplier: 1

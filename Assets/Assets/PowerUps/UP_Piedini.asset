@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UP_Piedini
   m_EditorClassIdentifier: Assembly-CSharp:Assets.Scripts.Runtime:PowerUpEffectSO
   powerUpName: POWER UP
-  pickupText: Power up!
+  pickupText: Speed UP!
   durationSeconds: 5
   modifiers:
     moveSpeedMultiplier: 2
