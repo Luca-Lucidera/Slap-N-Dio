@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29f13fc0407774444982b7530e6fa9ad, type: 3}
+  m_Name: UP_PotenzaSchiaffo
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PlayerPowerUps.PowerUpEffect
+  powerUpName: Schiaffone de Cristus
+  pickupText: Schiaffone de Cristus
+  durationSeconds: 10
+  modifiers:
+    moveSpeedMultiplier: 1
+    slapForceMultiplier: 10
+    slapCooldownMultiplier: 1
+    slapRadiusMultiplier: 1
+    playerScaleMultiplier: 1
+    massMultiplier: 1
