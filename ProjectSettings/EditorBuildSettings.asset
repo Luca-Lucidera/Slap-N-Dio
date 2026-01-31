@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Select Player Scene.unity
     guid: 7d54fa6c4324e8140be5086fa8dee8f9
+  - enabled: 1
+    path: Assets/Scenes/Blockout.unity
+    guid: e5065b238312e5c49b869b4899c107f2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

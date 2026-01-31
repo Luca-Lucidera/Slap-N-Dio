@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5268146108057294619}
   - component: {fileID: 2115601580845481055}
   - component: {fileID: 6922015349554317084}
+  - component: {fileID: 5375673365817107684}
   m_Layer: 5
   m_Name: Background Player 3
   m_TagString: Untagged
@@ -76,6 +77,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5375673365817107684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762391855673737731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50949fadf79044499aada4004b988b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.UI.PlayerSlotUI
+  slotIndex: 2
 --- !u!1 &2344197625867940506
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,6 +101,7 @@ GameObject:
   - component: {fileID: 1396834453455353970}
   - component: {fileID: 165478649452543941}
   - component: {fileID: 8182603262181747771}
+  - component: {fileID: 5475761083999733705}
   m_Layer: 5
   m_Name: Background Player 1
   m_TagString: Untagged
@@ -152,6 +167,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5475761083999733705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2344197625867940506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50949fadf79044499aada4004b988b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.UI.PlayerSlotUI
+  slotIndex: 0
 --- !u!1 &2868674672879350361
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +382,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: premi per joinare
+  m_text: premi A per joinare
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
   m_sharedMaterial: {fileID: -8703618957231455192, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
@@ -420,7 +448,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 20, y: 0, z: 20, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -437,6 +465,7 @@ GameObject:
   - component: {fileID: 3075779397482943956}
   - component: {fileID: 5414465713734547980}
   - component: {fileID: 8879521440649285170}
+  - component: {fileID: 8837994688427990659}
   m_Layer: 5
   m_Name: Background Player 4
   m_TagString: Untagged
@@ -502,6 +531,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8837994688427990659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3343895956790821128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50949fadf79044499aada4004b988b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.UI.PlayerSlotUI
+  slotIndex: 3
 --- !u!1 &5312352919245510214
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,6 +555,7 @@ GameObject:
   - component: {fileID: 7070014554309316591}
   - component: {fileID: 5867828129709710229}
   - component: {fileID: 4976527727723646816}
+  - component: {fileID: 1760730361134118599}
   m_Layer: 5
   m_Name: Navbar
   m_TagString: Untagged
@@ -536,7 +579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 50.03777}
+  m_AnchoredPosition: {x: 0, y: 50.03772}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &5867828129709710229
@@ -577,6 +620,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1760730361134118599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5312352919245510214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab38d31fe1407c49911f48f1d71e02f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.UI.PressStartToLoadMainGame
+  sceneToLoadBuildIndex: 2
+  image: {fileID: 4976527727723646816}
 --- !u!1 &5516870619368096033
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +748,7 @@ GameObject:
   - component: {fileID: 282467567472667673}
   - component: {fileID: 1355795571049786424}
   - component: {fileID: 2844639407051417258}
+  - component: {fileID: 7996228643778977888}
   m_Layer: 5
   m_Name: Background Player 2
   m_TagString: Untagged
@@ -756,6 +814,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7996228643778977888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5519920766086354045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e50949fadf79044499aada4004b988b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.UI.PlayerSlotUI
+  slotIndex: 1
 --- !u!1 &6970188693285202906
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,7 +998,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: premi per joinare
+  m_text: premi A per joinare
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
   m_sharedMaterial: {fileID: -8703618957231455192, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
@@ -993,7 +1064,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 20, y: 0, z: 20, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1064,7 +1135,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: premi per joinare
+  m_text: premi A per joinare
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
   m_sharedMaterial: {fileID: -8703618957231455192, guid: 219af3430988f954dbc1c939594b1f14, type: 2}
@@ -1130,7 +1201,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 20, y: 0, z: 20, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
