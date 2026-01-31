@@ -31,11 +31,10 @@ Transform:
   m_GameObject: {fileID: 6359157464530998412}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.86579, y: 0, z: -1.06704}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7585014463202930686}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &7251900170119791716
@@ -168,78 +167,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5a354ae8d9630449ff05fe0d6f5d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.PlayerPowerUps.PlayerPowerUpController
-  stats: {fileID: 0}
-  floatingTextPrefab: {fileID: 7798123913142556203}
---- !u!1001 &7824087710722258651
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1937166047674759026}
-    m_Modifications:
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4982263017603286854, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-      propertyPath: m_Name
-      value: FloatingText
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 3f251e99d40898d489ed442682e85510, type: 3}
---- !u!4 &7585014463202930686 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 421047146594195749, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-  m_PrefabInstance: {fileID: 7824087710722258651}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7798123913142556203 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 48482073153773808, guid: 3f251e99d40898d489ed442682e85510, type: 3}
-  m_PrefabInstance: {fileID: 7824087710722258651}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 694d41cca23800c40b4bf6a81756c49c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Scripts.Runtime.FloatingText
+  playerController: {fileID: 0}
+  floatingTextPrefab: {fileID: 48482073153773808, guid: 3f251e99d40898d489ed442682e85510, type: 3}
